@@ -4,82 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Display;
 use Illuminate\Http\Request;
+use App\Http\Helpers\HttpResponse;
+use App\Http\Requests\DisplayRequest;
 
 class DisplayController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+
+    public function index() {
+        return Display::where('active', '!=', 2 )->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function show($id){
+        return Display::find($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(DisplayRequest $request) {
+        $display = Display::create($request->all());
+        return response()->json($display, HttpResponse::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Display  $display
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Display $display)
-    {
-        //
+    public function update(Request $request, Display $display) {
+        $display->update($request->all());
+        return response()->json($display, HttpResponse::HTTP_OK);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Display  $display
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Display $display)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Display  $display
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Display $display)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Display  $display
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Display $display)
-    {
-        //
+    public function destroy(Display $display) {
+        $display->update(['active' => 2]);
+        return response()->json(null, HttpResponse::HTTP_NO_CONTENT);
     }
 }
